@@ -16,5 +16,6 @@ namespace censudex_clients_service.src.models
         public string Address { get; set; } = string.Empty;
         // Fecha de registro del usuario
         public DateTime CreatedAt { get; set; }
+        public DateTime DeletedAt { get; set; }
     }
 }
