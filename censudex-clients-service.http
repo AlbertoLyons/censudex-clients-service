@@ -1,0 +1,6 @@
+@censudex_clients_service_HostAddress = http://localhost:5160
+
+GET {{censudex_clients_service_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
