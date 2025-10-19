@@ -38,7 +38,16 @@ db-down:
 	@echo "$(GREEN)Stopping PSQL container...$(NC)"
 	@docker stop censudex-db-clients 2>/dev/null || echo "$(YELLOW)Container was not running$(NC)"
 	@echo "$(GREEN)PSQL stopped$(NC)"
-
+# Create initial migration
+migrate-create:
+	@echo "$(GREEN)Creating initial migration...$(NC)"
+	@cd $(HOST_PATH) && dotnet ef migrations add InitialCreate --output-dir src/data/migrations
+	@echo "$(GREEN)Initial migration created$(NC)"
+# Apply migrations to the database
+migrate-apply:
+	@echo "$(GREEN)Applying migrations to the database...$(NC)"
+	@cd $(HOST_PATH) && dotnet ef database update
+	@echo "$(GREEN)Migrations applied$(NC)"
 # Run the application
 run:
 	@echo "$(GREEN)Starting application with watch (no hot reload)...$(NC)"
