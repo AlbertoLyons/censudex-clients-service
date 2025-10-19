@@ -34,7 +34,9 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
     options.Password.RequireDigit = true;
     options.Password.RequiredUniqueChars = 1;
     options.User.RequireUniqueEmail = true;
-}).AddEntityFrameworkStores<DataContext>();
+})
+.AddEntityFrameworkStores<DataContext>()
+.AddDefaultTokenProviders();
 
 var app = builder.Build();
 
