@@ -8,6 +8,8 @@ using censudex_clients_service.src.services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+DotEnv.Load();
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseNpgsql(
@@ -32,7 +34,7 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
     options.Password.RequireDigit = true;
     options.Password.RequiredUniqueChars = 1;
     options.User.RequireUniqueEmail = true;
-});
+}).AddEntityFrameworkStores<DataContext>();
 
 var app = builder.Build();
 
