@@ -12,10 +12,6 @@ namespace censudex_clients_service.src.dtos
     public class EditUserDTO
     {
         /// <summary>
-        /// Identificador único del usuario. (GUID V4)
-        /// </summary>
-        public required Guid Id { get; set; }
-        /// <summary>
         /// Nombres del usuario.
         /// </summary>
         public required string Names { get; set; }
