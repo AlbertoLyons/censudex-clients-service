@@ -26,6 +26,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 // Configuración del servicio de hashing de contraseñas con el algoritmo BCrypt
 builder.Services.AddScoped<IPasswordHasher<User>, BCryptService<User>>();
+// Registro del servicio de SendGrid para el envío de correos electrónicos
+builder.Services.AddSingleton<SendGridService>();
 builder.Services.AddEndpointsApiExplorer();
 // Configuración de Identity para la gestión de usuarios y roles
 builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>

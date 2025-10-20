@@ -1,6 +1,7 @@
 using censudex_clients_service.src.dtos;
 using censudex_clients_service.src.mappers;
 using censudex_clients_service.src.models;
+using censudex_clients_service.src.services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,12 +19,50 @@ namespace censudex_clients_service.src.controllers
         /// </summary>
         private readonly UserManager<User> _userManager;
         /// <summary>
+        /// Servicio de SendGrid para el envío de correos electrónicos.
+        /// </summary>
+        private readonly SendGridService _sendGridService;
+        /// <summary>
         /// Constructor del controlador de usuarios.
         /// </summary>
         /// <param name="userManager"></param>
-        public UserController(UserManager<User> userManager)
+        /// <param name="sendGridService"></param>
+        public UserController(UserManager<User> userManager, SendGridService sendGridService)
         {
             _userManager = userManager;
+            _sendGridService = sendGridService;
+        }
+        /// <summary>
+        /// Envía un correo electrónico utilizando SendGrid.
+        /// </summary>
+        /// <param name="sendMailDTO"></param>
+        /// <returns></returns>
+        [HttpPost("sendMail")]
+        public async Task<IActionResult> SendMail([FromBody] SendMailDTO sendMailDTO)
+        {
+            // Verificar si el correo electrónico del destinatario está registrado en la base de datos.
+            if (_userManager.Users.All(u => u.Email != sendMailDTO.ToEmail))
+            {
+                return BadRequest(new { Message = "El correo electrónico del destinatario no está registrado" });
+            }
+            // Enviar el correo electrónico utilizando el servicio de SendGrid.
+            var response = await SendGridService.SendEmailAsync(
+                sendMailDTO.FromEmail,
+                sendMailDTO.ToEmail,
+                sendMailDTO.Subject,
+                sendMailDTO.PlainTextContent,
+                sendMailDTO.HtmlContent
+            );
+            // Devolver el resultado del envío.
+            if (response.StatusCode == System.Net.HttpStatusCode.Accepted || response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return Ok(new { Message = "Correo enviado exitosamente" });
+            }
+            // Devolver error en caso de fallo.
+            else
+            {
+                return StatusCode((int)response.StatusCode, new { Message = "Error al enviar el correo" });
+            }
         }
         /// <summary>
         /// Registra un nuevo usuario cliente.
