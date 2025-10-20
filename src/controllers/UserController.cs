@@ -33,6 +33,7 @@ namespace censudex_clients_service.src.controllers
 
             if (result.Succeeded)
             {
+                await _userManager.AddToRoleAsync(user, "Client");
                 return Ok(new { Message = "Cliente registrado exitosamente" });
             }
             else

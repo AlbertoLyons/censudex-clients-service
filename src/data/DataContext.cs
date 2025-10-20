@@ -14,6 +14,23 @@ namespace censudex_clients_service.src.data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            List<IdentityRole<Guid>> roles = new List<IdentityRole<Guid>>
+            {
+                new IdentityRole<Guid>
+                {
+                    Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
+                },
+                new IdentityRole<Guid>
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                    Name = "Client",
+                    NormalizedName = "CLIENT"
+                }
+            };
+            builder.Entity<IdentityRole<Guid>>().HasData(roles);
+
         }
     }
 }
