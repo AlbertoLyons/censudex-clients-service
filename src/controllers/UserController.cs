@@ -270,8 +270,8 @@ namespace censudex_clients_service.src.controllers
             // Devolver éxito si las credenciales son válidas
             var response = new
             {
-                Message = "Credenciales válidas",
-                Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault()
+                Id = user.Id,
+                Roles = await _userManager.GetRolesAsync(user)
             };
             return Ok(response);
         }
