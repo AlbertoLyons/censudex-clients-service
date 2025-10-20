@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  route-service:
+    build: .
+    ports:
+      - "5003:5003"
+    environment:
+      - PostgreSQLConnection=${PostgreSQLConnection}
