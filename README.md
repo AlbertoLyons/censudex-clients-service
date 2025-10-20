@@ -46,6 +46,7 @@ dotnet run
 ```
 ## Uso de makefile
 Si se dispone de MakeFile, se recomiendan los siguientes comandos para poder establecer el proyecto junto con la base de datos en un contenedor con docker previamente instalado
+
 1.- Inicializar el proyecto
 ```bash
 make setup
