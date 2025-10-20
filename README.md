@@ -67,6 +67,7 @@ make run
 ## Estructura del repositorio
 - Funciona con una API de tipo REST
 - Se ofrece un .env de con datos de ejemplo
+- Se ofrece una colección de postman para ver las rutas a usar
 - Se utiliza el Framework .NET de C#
 - Utiliza una base de datos relacional PostgreSQL
 - El proyecto como módulo se debe de conectar a una main API
