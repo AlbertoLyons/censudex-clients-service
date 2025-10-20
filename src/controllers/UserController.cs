@@ -244,5 +244,36 @@ namespace censudex_clients_service.src.controllers
                 return BadRequest(result.Errors);
             }
         }
+        /// <summary>
+        /// Verifica las credenciales de un usuario (nombre de usuario y contraseña).
+        /// Retorna el rol del usuario si las credenciales son válidas.
+        /// </summary>
+        /// <param name="verifyCredentialsDTO"></param>
+        /// <returns></returns>
+        [HttpPost("verifyCredentials")]
+        public async Task<IActionResult> VerifyCredentials([FromBody] VerifyCredentialsDTO verifyCredentialsDTO)
+        {
+            // Buscar el usuario por nombre de usuario o correo electrónico
+            var user = await _userManager.FindByNameAsync(verifyCredentialsDTO.Username)
+                ?? await _userManager.FindByEmailAsync(verifyCredentialsDTO.Username);
+            // Si no se encuentra, devolver NotFound
+            if (user == null)
+            {
+                return NotFound(new { Message = "Usuario no encontrado" });
+            }
+            // Verificar la contraseña
+            var passwordValid = await _userManager.CheckPasswordAsync(user, verifyCredentialsDTO.Password);
+            if (!passwordValid)
+            {
+                return BadRequest(new { Message = "Credenciales inválidas" });
+            }
+            // Devolver éxito si las credenciales son válidas
+            var response = new
+            {
+                Message = "Credenciales válidas",
+                Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault()
+            };
+            return Ok(response);
+        }
     }
 }
