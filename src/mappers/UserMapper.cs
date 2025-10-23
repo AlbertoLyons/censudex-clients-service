@@ -17,19 +17,19 @@ namespace censudex_clients_service.src.mappers
         /// </summary>
         /// <param name="registerDTO"></param>
         /// <returns></returns>
-        public static User RegisterToUser(RegisterDTO registerDTO)
+        public static User RegisterToUser(UserProto.CreateUserRequest createUserRequest)
         {
             return new User
             {
                 // Combinación de nombres y apellidos en FullName
-                FullName = $"{registerDTO.Names} {registerDTO.LastNames}",
-                Email = registerDTO.Email,
-                UserName = registerDTO.Username,
+                FullName = $"{createUserRequest.Names} {createUserRequest.Lastnames}",
+                Email = createUserRequest.Email,
+                UserName = createUserRequest.Username,
                 // Estado inicial del usuario, por defecto activo
                 Status = true,
-                BirthDate = registerDTO.BirthDate,
-                Address = registerDTO.Address,
-                PhoneNumber = registerDTO.PhoneNumber,
+                BirthDate = DateOnly.Parse(createUserRequest.Birthdate),
+                Address = createUserRequest.Address,
+                PhoneNumber = createUserRequest.Phonenumber,
                 // Fecha de creación establecida a la fecha y hora actual UTC
                 CreatedAt = DateTime.UtcNow
             };
@@ -39,44 +39,44 @@ namespace censudex_clients_service.src.mappers
         /// </summary>
         /// <param name="users"></param>
         /// <returns></returns>
-        public static List<GetUserDTO> UsersToGetUserDTOs(List<User> users)
+        public static List<UserProto.User> UsersToGetUserDTOs(List<User> users)
         {
-            var getUserDTOs = new List<GetUserDTO>();
+            var getUserProto = new List<UserProto.User>();
             foreach (var user in users)
             {
-                getUserDTOs.Add(new GetUserDTO
+                getUserProto.Add(new UserProto.User
                 {
-                    Id = user.Id,
+                    Id = user.Id.ToString(),
                     FullName = user.FullName,
                     Email = user.Email!,
                     UserName = user.UserName!,
                     Status = user.Status,
-                    BirthDate = user.BirthDate,
+                    BirthDate = user.BirthDate.ToString("o"),
                     Address = user.Address,
-                    PhoneNumber = user.PhoneNumber!,
-                    CreatedAt = user.CreatedAt
+                    Phonenumber = user.PhoneNumber!,
+                    CreatedAt = user.CreatedAt.ToString("o")
                 });
             }
-            return getUserDTOs;
+            return getUserProto;
         }
         /// <summary>
         /// Convierte una entidad User a un GetUserDTO para el método GetUserById.
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static GetUserDTO UserToGetUserDTO(User user)
+        public static UserProto.User UserToGetUserDTO(User user)
         {
-            return new GetUserDTO
+            return new UserProto.User
             {
-                Id = user.Id,
+                Id = user.Id.ToString(),
                 FullName = user.FullName,
                 Email = user.Email!,
                 UserName = user.UserName!,
                 Status = user.Status,
-                BirthDate = user.BirthDate,
+                BirthDate = user.BirthDate.ToString("o"),
                 Address = user.Address,
-                PhoneNumber = user.PhoneNumber!,
-                CreatedAt = user.CreatedAt
+                Phonenumber = user.PhoneNumber!,
+                CreatedAt = user.CreatedAt.ToString("o")
             };
         }
         /// <summary>
@@ -85,15 +85,15 @@ namespace censudex_clients_service.src.mappers
         /// <param name="editUserDTO"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static User EditUserDTOToUser(EditUserDTO editUserDTO, User user)
+        public static User EditUserDTOToUser(UserProto.UpdateUserRequest editUser, User user)
         {
             // Combinación de nombres y apellidos en FullName
-            user.FullName = $"{editUserDTO.Names} {editUserDTO.LastNames}";
-            user.Email = editUserDTO.Email;
-            user.UserName = editUserDTO.Username;
-            user.BirthDate = editUserDTO.BirthDate;
-            user.Address = editUserDTO.Address;
-            user.PhoneNumber = editUserDTO.PhoneNumber;
+            user.FullName = $"{editUser.Names} {editUser.Lastnames}";
+            user.Email = editUser.Email;
+            user.UserName = editUser.Username;
+            user.BirthDate = DateOnly.Parse(editUser.Birthdate);
+            user.Address = editUser.Address;
+            user.PhoneNumber = editUser.Phonenumber;
             return user;
         }
     }

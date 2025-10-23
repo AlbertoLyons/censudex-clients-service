@@ -5,8 +5,10 @@ using dotenv.net.Utilities;
 using censudex_clients_service.src.data;
 using censudex_clients_service.src.models;
 using censudex_clients_service.src.services;
+using CensudexUsersService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddGrpc();
 // Carga de variables de entorno desde el archivo .env
 DotEnv.Load();
 // Configuración de la base de datos PostgreSQL con Entity Framework Core
@@ -21,14 +23,10 @@ builder.Services.AddDbContext<DataContext>(options =>
         )
     );
 });
-// Configuración de servicios y dependencias
-builder.Services.AddOpenApi();
-builder.Services.AddControllers();
 // Configuración del servicio de hashing de contraseñas con el algoritmo BCrypt
 builder.Services.AddScoped<IPasswordHasher<User>, BCryptService<User>>();
 // Registro del servicio de SendGrid para el envío de correos electrónicos
 builder.Services.AddSingleton<SendGridService>();
-builder.Services.AddEndpointsApiExplorer();
 // Configuración de Identity para la gestión de usuarios y roles
 builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
 {
@@ -54,11 +52,6 @@ using (var scope = app.Services.CreateScope())
     
 }
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
-app.MapControllers();
+app.MapGrpcService<UserService>();
+app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 app.Run();
