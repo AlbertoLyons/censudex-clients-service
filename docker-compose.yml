@@ -6,3 +6,5 @@ services:
       - "5003:5003"
     environment:
       - PostgreSQLConnection=${PostgreSQLConnection}
+      - SEND_GRID_API_KEY=${SEND_GRID_API_KEY}
+      - PORT=${PORT}
