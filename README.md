@@ -65,7 +65,8 @@ make run
 ```
 
 ## Estructura del repositorio
-- Funciona con una API de tipo REST
+- Funciona con una API de tipo GRPC
+- Se puede encontrar una colección de postman con datos de prueba dandole [click a este enlace](https://pm5555-1180.postman.co/workspace/censudex~d35666a5-243c-48a5-a764-be2248d7173f/collection/68f97e8bd2eca7ecf70c0480?action=share&creator=34959437)
 - Se ofrece un .env de con datos de ejemplo
 - Se ofrece una colección de postman para ver las rutas a usar
 - Se utiliza el Framework .NET de C#
