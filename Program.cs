@@ -39,6 +39,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddScoped<IPasswordHasher<User>, BCryptService<User>>();
 // Registro del servicio de SendGrid para el envío de correos electrónicos
 builder.Services.AddSingleton<SendGridService>();
+builder.Services.AddCors();
+
 // Configuración de Identity para la gestión de usuarios y roles
 builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
 {
