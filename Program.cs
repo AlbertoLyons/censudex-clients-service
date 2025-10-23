@@ -5,7 +5,9 @@ using dotenv.net.Utilities;
 using censudex_clients_service.src.data;
 using censudex_clients_service.src.models;
 using censudex_clients_service.src.services;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using CensudexUsersService.Services;
+using Grpc.AspNetCore.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddGrpc();
@@ -17,7 +19,8 @@ builder.WebHost.ConfigureKestrel(options =>
     var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
     options.ListenAnyIP(int.Parse(port), listenOptions =>
     {
-        listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
+        listenOptions.Protocols = HttpProtocols.Http2;
+                listenOptions.UseHttps(); 
     });
 });
 
@@ -62,7 +65,7 @@ using (var scope = app.Services.CreateScope())
     _ = DataSeeder.Initialize(services);
     
 }
-
-app.MapGrpcService<UserService>();
+app.UseGrpcWeb();
+app.MapGrpcService<UserService>().EnableGrpcWeb();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 app.Run();
