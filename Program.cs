@@ -55,6 +55,13 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
 
 
 var app = builder.Build();
+app.UseCors(builder =>
+{
+    builder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+});
 // Aplicación de migraciones pendientes y siembra inicial de datos
 using (var scope = app.Services.CreateScope())
 {
