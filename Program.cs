@@ -39,8 +39,15 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddScoped<IPasswordHasher<User>, BCryptService<User>>();
 // Registro del servicio de SendGrid para el envío de correos electrónicos
 builder.Services.AddSingleton<SendGridService>();
-builder.Services.AddCors();
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 // Configuración de Identity para la gestión de usuarios y roles
 builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
 {
@@ -57,13 +64,7 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
 
 
 var app = builder.Build();
-app.UseCors(builder =>
-{
-    builder
-        .AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader();
-});
+app.UseCors("AllowAll");
 // Aplicación de migraciones pendientes y siembra inicial de datos
 using (var scope = app.Services.CreateScope())
 {
@@ -74,6 +75,6 @@ using (var scope = app.Services.CreateScope())
     
 }
 app.UseGrpcWeb();
-app.MapGrpcService<UserService>().EnableGrpcWeb();
+app.MapGrpcService<UserService>().EnableGrpcWeb().RequireCors("AllowAll");
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 app.Run();
