@@ -40,6 +40,11 @@ namespace CensudexUsersService.Services
             {
                 throw new RpcException(new Status(StatusCode.InvalidArgument, "La solicitud no puede ser nula"));
             }
+            // Verificar que el correo electrónico termine en @censudex.cl
+            if (!request.Email.EndsWith("@censudex.cl"))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "El correo electrónico debe terminar en censudex.cl"));
+            }
             // Verificar si el correo electrónico ya está en uso
             if (_userManager.Users.Any(u => u.Email == request.Email)) throw new RpcException(new Status(StatusCode.InvalidArgument, "El correo electrónico ya está en uso"));
             // Validar formato de fecha de nacimiento
@@ -153,6 +158,10 @@ namespace CensudexUsersService.Services
             if (request == null || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Id))
             {
                 throw new RpcException(new Status(StatusCode.InvalidArgument, "La solicitud no puede ser nula. Unicamente la contraseña es opcional"));
+            }
+            if (!request.Email.EndsWith("@censudex.cl"))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "El correo electrónico debe terminar en censudex.cl"));
             }
             // Validar formato de fecha de nacimiento
             try
