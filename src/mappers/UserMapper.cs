@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using censudex_clients_service.src.dtos;
 using censudex_clients_service.src.models;
 
 namespace censudex_clients_service.src.mappers

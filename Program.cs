@@ -38,7 +38,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Configuración del servicio de hashing de contraseñas con el algoritmo BCrypt
 builder.Services.AddScoped<IPasswordHasher<User>, BCryptService<User>>();
 // Registro del servicio de SendGrid para el envío de correos electrónicos
-builder.Services.AddSingleton<SendGridService>();
+SendGridService sendGridService = new SendGridService();
+builder.Services.AddSingleton(sendGridService);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
