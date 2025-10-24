@@ -64,6 +64,12 @@ namespace CensudexUsersService.Services
                 if (birthDate > DateOnly.FromDateTime(DateTime.UtcNow).AddYears(-age)) age--;
                 if (age < 18) throw new RpcException(new Status(StatusCode.InvalidArgument, "El usuario debe ser mayor de 18 años"));
             }
+            var phone = request.Phonenumber;
+            // Validar formato de número de teléfono chileno
+            if (!phone.StartsWith("+56") || phone.Length != 12 || !phone.Substring(3).All(char.IsDigit))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "El número de teléfono debe tener el formato chileno y comenzar con +56. Ejemplo: +56912345678"));
+            }
             // Mapeo del DTO a entidad User
             var user = UserMapper.RegisterToUser(request);
             // Creación del usuario en la base de datos
@@ -172,6 +178,12 @@ namespace CensudexUsersService.Services
             catch (Exception)
             {
                 throw new RpcException(new Status(StatusCode.InvalidArgument, "La fecha de nacimiento no es válida. Formato esperado: AAAA-MM-DD"));
+            }
+            var phone = request.Phonenumber;
+            // Validar formato de número de teléfono chileno
+            if (!phone.StartsWith("+56") || phone.Length != 12 || !phone.Substring(3).All(char.IsDigit))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "El número de teléfono debe tener el formato chileno y comenzar con +56. Ejemplo: +56912345678"));
             }
             // Búsqueda del usuario por ID
             var user = _userManager.FindByIdAsync(request.Id).Result;
