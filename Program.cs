@@ -8,6 +8,10 @@ using censudex_clients_service.src.services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using CensudexUsersService.Services;
 using Grpc.AspNetCore.Web;
+using MassTransit;
+using censudex_clients_service.src.shared;
+using System.Security.Cryptography.X509Certificates;
+using censudex_clients_service.src.consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddGrpc();
@@ -63,6 +67,28 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
 .AddEntityFrameworkStores<DataContext>()
 .AddDefaultTokenProviders();
 
+// Añade MassTransit con RabbitMQ
+builder.Services.AddMassTransit(x =>
+{
+    // Registro del consumidor de mensajes de correo electrónico
+    x.AddConsumer<EmailMessageConsumer>();
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        // Configuración del host de RabbitMQ utilizando variables de entorno
+        cfg.Host(Environment.GetEnvironmentVariable("RABBITMQ_HOST")!, h =>
+        {
+            h.Username(Environment.GetEnvironmentVariable("RABBITMQ_USERNAME")!);
+            h.Password(Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD")!);
+        });
+        // Configuración del endpoint de recepción de mensajes
+        cfg.ReceiveEndpoint("email-message-queue", e =>
+        {
+            // Se añade el deserializador JSON sin formato para manejar los mensajes entrantes al usar un microservicio externo
+            e.UseRawJsonDeserializer();
+            e.ConfigureConsumer<EmailMessageConsumer>(context);
+        });
+    });
+});
 
 var app = builder.Build();
 app.UseCors("AllowAll");

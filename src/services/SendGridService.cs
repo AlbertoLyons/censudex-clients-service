@@ -1,5 +1,6 @@
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using censudex_clients_service.src.shared;
 
 namespace censudex_clients_service.src.services
 {
@@ -11,29 +12,25 @@ namespace censudex_clients_service.src.services
         /// <summary>
         /// Función para envíar los correos electrónicos.
         /// </summary>
-        /// <param name="fromMail"></param>
-        /// <param name="toEmail"></param>
-        /// <param name="subject"></param>
-        /// <param name="plainTextContent"></param>
-        /// <param name="htmlContent"></param>
+        /// <param name="emailMessage"></param>
         /// <returns></returns>
-        public static async Task<Response> SendEmailAsync(string fromMail, string toEmail, string subject, string plainTextContent, string htmlContent)
+        public static async Task<Response> SendEmailAsync(EmailMessage emailMessage)
         {
             // Obtener la clave API de SendGrid desde las variables de entorno.
             var apiKey = Environment.GetEnvironmentVariable("SEND_GRID_API_KEY");
             // Crear el cliente de SendGrid y el mensaje de correo electrónico.
             var client = new SendGridClient(apiKey);
             // Configurar el correo electrónico.
-            var from = new EmailAddress(fromMail, "Censudex Clients Service");
+            var from = new EmailAddress(emailMessage.From, "Censudex Clients Service");
             // Configurar el destinatario del correo.
-            var to = new EmailAddress(toEmail);
+            var to = new EmailAddress(emailMessage.To);
             // Crear el mensaje de correo electrónico.
             var msg = MailHelper.CreateSingleEmail(
                 from,
                 to,
-                subject,
-                plainTextContent,
-                htmlContent
+                emailMessage.Subject,
+                emailMessage.PlainTextContent,
+                emailMessage.HtmlContent
             );
             // Enviar el correo electrónico y devolver la respuesta.
             var response = await client.SendEmailAsync(msg);

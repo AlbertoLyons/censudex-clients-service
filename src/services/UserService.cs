@@ -292,36 +292,5 @@ namespace CensudexUsersService.Services
             // Retorno de la respuesta
             return Task.FromResult(response);
         }
-        /// <summary>
-        /// Envía un correo electrónico utilizando el servicio SendGridService,
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <returns>Mensaje de respuesta</returns>
-        /// <exception cref="RpcException"></exception>
-        public override async Task<UserProto.SendEmailResponse> SendEmail(UserProto.SendEmailRequest request, ServerCallContext context)
-        {
-            // Inicialización de la respuesta
-            var response = new UserProto.SendEmailResponse();
-            // Validaciones en caso de que el correo electrónico del destinatario no esté registrados en la base de datos
-            if (_userManager.Users.All(u => u.Email != request.Toemail)) throw new RpcException(new Status(StatusCode.InvalidArgument, "El correo electrónico del destinatario no está registrado"));
-            // Envío del correo electrónico utilizando el servicio SendGridService
-            var emailSentResponse = await SendGridService.SendEmailAsync(
-                request.Fromemail,
-                request.Toemail,
-                request.Subject,
-                request.Plaintextcontent,
-                request.Htmlcontent);
-            // Retorno de la respuesta o excepción en caso de error
-            if (emailSentResponse.StatusCode == System.Net.HttpStatusCode.Accepted || emailSentResponse.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                response.Message = "Correo electrónico enviado exitosamente";
-                return await Task.FromResult(response);
-            }
-            else
-            {
-                throw new RpcException(new Status(StatusCode.Internal, "Error al enviar el correo electrónico"));
-            }
-        }
     }
 }
