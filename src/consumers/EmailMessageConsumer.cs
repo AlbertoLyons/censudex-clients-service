@@ -1,5 +1,5 @@
 using MassTransit;
-using censudex_clients_service.src.shared;
+using shared.messages;
 using censudex_clients_service.src.services;
 
 namespace censudex_clients_service.src.consumers

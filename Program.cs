@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using CensudexUsersService.Services;
 using Grpc.AspNetCore.Web;
 using MassTransit;
-using censudex_clients_service.src.shared;
+using shared.messages;
 using System.Security.Cryptography.X509Certificates;
 using censudex_clients_service.src.consumers;
 

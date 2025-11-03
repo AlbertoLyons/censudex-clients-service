@@ -1,6 +1,6 @@
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using censudex_clients_service.src.shared;
+using shared.messages;
 
 namespace censudex_clients_service.src.services
 {
