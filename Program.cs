@@ -7,7 +7,6 @@ using censudex_clients_service.src.models;
 using censudex_clients_service.src.services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using CensudexUsersService.Services;
-using Grpc.AspNetCore.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddGrpc();
@@ -37,9 +36,6 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 // Configuración del servicio de hashing de contraseñas con el algoritmo BCrypt
 builder.Services.AddScoped<IPasswordHasher<User>, BCryptService<User>>();
-// Registro del servicio de SendGrid para el envío de correos electrónicos
-SendGridService sendGridService = new SendGridService();
-builder.Services.AddSingleton(sendGridService);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>

@@ -72,18 +72,6 @@ message DeleteUserResponse {
     string message = 1;
 }
 
-message SendEmailRequest {
-    string fromemail = 1;
-    string toemail = 2;
-    string subject = 3;
-    string plaintextcontent = 4;
-    string htmlcontent = 5;
-}
-
-message SendEmailResponse {
-    string message = 1;
-}
-
 message VerifyCredentialsRequest {
     string username = 1;
     string password = 2;
@@ -100,7 +88,6 @@ service UserService {
     rpc GetById (GetUserByIdRequest) returns (GetUserByIdResponse);
     rpc Update (UpdateUserRequest) returns (UpdateUserResponse);
     rpc Delete (DeleteUserRequest) returns (DeleteUserResponse);
-    rpc SendEmail (SendEmailRequest) returns (SendEmailResponse);
     rpc VerifyCredentials (VerifyCredentialsRequest) returns (VerifyCredentialsResponse);
 }
 
