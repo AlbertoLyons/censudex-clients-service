@@ -59,7 +59,6 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
 .AddEntityFrameworkStores<DataContext>()
 .AddDefaultTokenProviders();
 
-
 var app = builder.Build();
 app.UseCors("AllowAll");
 // Aplicación de migraciones pendientes y siembra inicial de datos

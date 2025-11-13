@@ -52,3 +52,11 @@ migrate-apply:
 run:
 	@echo "$(GREEN)Starting application with watch (no hot reload)...$(NC)"
 	@cd $(HOST_PATH) && dotnet watch run --no-hot-reload
+# Run RabbitMQ container
+rabbitmq-up:
+	@echo "$(GREEN)Starting RabbitMQ container...$(NC)"
+	@docker run -d --hostname my-rabbit --name censudex-rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management || \
+	(echo "$(YELLOW)Container already exists, starting...$(NC)" && docker start censudex-rabbitmq)
+	@echo "$(YELLOW)Waiting for RabbitMQ to be ready...$(NC)"
+	@powershell -Command "Start-Sleep" 10
+	@echo "$(GREEN)RabbitMQ is ready$(NC)"
